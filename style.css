@@ -93,7 +93,7 @@ button {
             rgba(0,0,0,0.8)
         ),
 
-        url("background1.jpg");
+        url("assets/background1.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1047,7 +1047,7 @@ button {
             rgba(0,0,0,0.9)
         ),
 
-        url("background7.jpg");
+        url("assets/background7.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1341,45 +1341,98 @@ button {
 #leaderboardScreen {
     width: 100vw;
     height: 100vh;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    overflow: hidden;
 }
+
 
 #leaderboardScreen .menu-container {
     width: min(1100px, 92vw);
+
+    height: 90vh;
     max-height: 90vh;
+
     padding: 45px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
 }
 
-/* Make LEADERBOARD title fit */
+
+/* =========================================
+   LEADERBOARD TITLE
+========================================= */
 
 #leaderboardScreen .logo-container h1 {
     font-size: clamp(45px, 8vw, 90px);
+
     letter-spacing: -3px;
+
     white-space: nowrap;
+
+    flex-shrink: 0;
 }
 
-/* Leaderboard list */
+
+/* =========================================
+   LEADERBOARD LIST
+========================================= */
 
 #leaderboardList {
     width: 100%;
+
     margin-top: 35px;
+
+    /* THIS IS THE IMPORTANT PART */
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 5px 10px 10px 5px;
+
+    box-sizing: border-box;
+
+    scrollbar-width: thin;
 }
 
-/* Individual leaderboard rows */
+
+/* =========================================
+   INDIVIDUAL LEADERBOARD ROWS
+========================================= */
 
 .leaderboard-row {
     display: grid;
-    grid-template-columns: 80px 1fr 180px 120px;
+
+    grid-template-columns:
+        80px
+        1fr
+        180px
+        120px;
+
     align-items: center;
+
     gap: 20px;
 
     width: 100%;
+
     min-height: 65px;
 
     padding: 10px 20px;
+
     margin-bottom: 8px;
+
+    box-sizing: border-box;
 
     background: rgba(255,255,255,0.06);
 
@@ -1388,25 +1441,128 @@ button {
     border-radius: 12px;
 }
 
+
+/* =========================================
+   TEXT
+========================================= */
+
 .leaderboard-rank {
     font-size: 20px;
     font-weight: 1000;
 }
 
+
 .leaderboard-name {
     font-size: 18px;
     font-weight: 900;
+
     text-align: left;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
+
 
 .leaderboard-score {
     font-size: 20px;
     font-weight: 1000;
+
     text-align: right;
 }
 
+
 .leaderboard-date {
     font-size: 12px;
+
     color: rgba(255,255,255,0.45);
+
     text-align: right;
+}
+
+
+/* =========================================
+   MOBILE LEADERBOARD
+========================================= */
+
+@media (max-width: 600px) {
+
+    #leaderboardScreen .menu-container {
+
+        width: 94vw;
+
+        height: 90vh;
+
+        padding: 20px 12px;
+
+    }
+
+
+    #leaderboardScreen .logo-container h1 {
+
+        font-size: clamp(32px, 11vw, 55px);
+
+        letter-spacing: -2px;
+
+    }
+
+
+    #leaderboardList {
+
+        margin-top: 20px;
+
+        padding: 5px;
+
+    }
+
+
+    .leaderboard-row {
+
+        grid-template-columns:
+            45px
+            1fr
+            85px;
+
+        gap: 6px;
+
+        min-height: 55px;
+
+        padding: 8px 10px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .leaderboard-rank {
+
+        font-size: 15px;
+
+    }
+
+
+    .leaderboard-name {
+
+        font-size: 14px;
+
+    }
+
+
+    .leaderboard-score {
+
+        font-size: 15px;
+
+    }
+
+
+    /* Hide dates on small screens */
+
+    .leaderboard-date {
+
+        display: none;
+
+    }
+
 }
