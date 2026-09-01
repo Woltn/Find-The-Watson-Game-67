@@ -54,17 +54,12 @@
 
                 </button>
 
-
-                <button id="highScoreButton" class="menu-button">
-
-                    <span>🏆</span>
-
-                    <span>HIGH SCORE</span>
-
-                </button>
-
                 <button id="leaderboardButton" class="menu-button">
                     🌎 LEADERBOARD
+                </button>
+
+                <button id="skinsButton" class="menu-button">
+                    🎨 SKINS
                 </button>
 
             </div>
@@ -79,7 +74,7 @@
 
                 <div>
                     <span>TIME</span>
-                    <strong>45 SECONDS</strong>
+                    <strong>0:50</strong>
                 </div>
 
             </div>
@@ -217,7 +212,7 @@
                 </span>
 
                 <strong id="timer">
-                    0:45
+                    0:50
                 </strong>
 
             </div>
@@ -363,6 +358,96 @@
         >
             CONTINUE
         </button>
+
+    </div>
+
+</div>
+
+<div id="skinsScreen" class="screen hidden">
+
+    <div class="menu-container">
+
+        <div class="logo-small">
+            FIND WATSON
+        </div>
+
+        <div class="logo-container">
+            <h1>
+                <span>SKINS</span>
+            </h1>
+        </div>
+
+        <p class="skins-subtitle">
+            CHOOSE WHO YOU WANT TO FIND!
+        </p>
+
+
+        <div id="skinsGrid" class="skins-grid">
+
+            <button class="skin-card selected" data-skin="watson">
+
+                <img src="watson.png">
+
+                <div class="skin-name">
+                    WHAT UP
+                </div>
+
+            </button>
+
+
+            <button class="skin-card" data-skin="triplet.jpg">
+
+                <img src="triplet.jpg">
+
+                <div class="skin-name">
+                    TRIPLE T
+                </div>
+
+            </button>
+
+
+            <button class="skin-card" data-skin="pizza.jpg">
+
+                <img src="pizza.jpg">
+
+                <div class="skin-name">
+                    PIZZA
+                </div>
+
+            </button>
+
+
+            <button class="skin-card" data-skin="corndogcat.jpg">
+
+                <img src="corndogcat.jpg">
+
+                <div class="skin-name">
+                    CORNDOG CAT
+                </div>
+
+            </button>
+
+
+            <button class="skin-card" data-skin="bob.jpg">
+
+                <img src="bob.jpg">
+
+                <div class="skin-name">
+                    BOB
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <div class="menu-buttons">
+
+            <button id="skinsBackButton" class="menu-button">
+                ← BACK
+            </button>
+
+        </div>
 
     </div>
 
