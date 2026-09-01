@@ -63,13 +63,13 @@ console.log("");
 // SETTINGS
 // ============================================================
 
-const GAME_LENGTH = 45;
+const GAME_LENGTH = 50;
 
 const STARTING_WATSON_SIZE = 116;
 const MIN_WATSON_SIZE = 34;
 
 const STARTING_FIND_TIME = 20;
-const MIN_FIND_TIME = 2;
+const MIN_FIND_TIME = 2.5;
 
 const POINTS_PER_FIND = 20;
 
@@ -318,13 +318,13 @@ console.log("");
 
 const backgrounds = [
 
-    "background1.jpg",
-    "background2.jpg",
-    "background3.jpg",
-    "background4.jpg",
-    "background5.jpg",
-    "background6.jpg",
-    "background7.jpeg"
+    "assets/background1.jpg",
+    "assets/background2.jpg",
+    "assets/background3.jpg",
+    "assets/background4.jpg",
+    "assets/background5.jpg",
+    "assets/background6.jpg",
+    "assets/background7.jpeg"
 
 ];
 
@@ -2137,7 +2137,12 @@ async function loadLeaderboard() {
             row.innerHTML = `
 
                 <div class="leaderboard-rank">
-                    #${rank}
+                    ${
+                    rank === 1 ? "🥇" :
+                    rank === 2 ? "🥈" :
+                    rank === 3 ? "🥉" :
+                    `#${rank}`
+                    }
                 </div>
 
                 <div class="leaderboard-name">
