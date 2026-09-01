@@ -90,6 +90,18 @@ const LEADERBOARD_PATH =
 // ELEMENTS
 // ============================================================
 
+const skinsButton =
+    document.getElementById("skinsButton");
+
+const skinsScreen =
+    document.getElementById("skinsScreen");
+
+const skinsBackButton =
+    document.getElementById("skinsBackButton");
+
+const skinCards =
+    document.querySelectorAll(".skin-card");
+
 const gameMusic =
     document.getElementById("gameMusic");
 
@@ -311,6 +323,61 @@ for (
 
 console.log("");
 
+// ============================================================
+// SKINS
+// ============================================================
+
+const SKIN_STORAGE_KEY =
+    "findWatsonSelectedSkin";
+
+
+let selectedSkin =
+    localStorage.getItem(
+        SKIN_STORAGE_KEY
+    ) || "watson.png";
+
+
+const skins = {
+
+    "watson":
+        "watson.png",
+
+    "watson.png":
+        "watson.png",
+
+    "triplet.jpg":
+        "triplet.jpg",
+
+    "pizza.jpg":
+        "pizza.jpg",
+
+    "corndogcat.jpg":
+        "corndogcat.jpg",
+
+    "bob.jpg":
+        "bob.jpg"
+
+};
+
+
+function applySkin() {
+
+    const skinPath =
+        skins[selectedSkin] ||
+        "watson.png";
+
+
+    watson.src =
+        skinPath;
+
+
+    console.log(
+        "🎨 Skin equipped:",
+        selectedSkin
+    );
+
+}
+
 
 // ============================================================
 // BACKGROUNDS
@@ -324,7 +391,7 @@ const backgrounds = [
     "background4.jpg",
     "background5.jpg",
     "background6.jpg",
-    "background7.jpeg"
+    "background7.jpg"
 
 ];
 
@@ -1776,6 +1843,169 @@ if (menuButton) {
 
 }
 
+// ============================================================
+// SKINS BUTTON
+// ============================================================
+
+if (skinsButton) {
+
+    skinsButton.addEventListener(
+        "click",
+        function() {
+
+            console.log(
+                "🎨 SKINS BUTTON CLICKED"
+            );
+
+
+            document
+                .querySelectorAll(".screen")
+                .forEach(
+                    function(screen) {
+
+                        screen.classList.add(
+                            "hidden"
+                        );
+
+                    }
+                );
+
+
+            skinsScreen.classList.remove(
+                "hidden"
+            );
+
+
+            console.log(
+                "✅ SKINS SCREEN OPENED"
+            );
+
+        }
+    );
+
+}
+else {
+
+    console.error(
+        "❌ skinsButton NOT FOUND"
+    );
+
+}
+
+// ============================================================
+// SKINS BACK BUTTON
+// ============================================================
+
+if (skinsBackButton) {
+
+    skinsBackButton.addEventListener(
+        "click",
+        function() {
+
+            console.log(
+                "← SKINS BACK BUTTON CLICKED"
+            );
+
+
+            skinsScreen.classList.add(
+                "hidden"
+            );
+
+
+            menuScreen.classList.remove(
+                "hidden"
+            );
+
+        }
+    );
+
+}
+else {
+
+    console.error(
+        "❌ skinsBackButton NOT FOUND"
+    );
+
+}
+
+// ============================================================
+// SKIN CARDS
+// ============================================================
+
+if (skinCards.length > 0) {
+
+    skinCards.forEach(
+        function(card) {
+
+            card.addEventListener(
+                "click",
+                function() {
+
+                    const skin =
+                        card.dataset.skin;
+
+
+                    console.log(
+                        "🎨 Selecting skin:",
+                        skin
+                    );
+
+
+                    selectedSkin =
+                        skin;
+
+
+                    localStorage.setItem(
+                        SKIN_STORAGE_KEY,
+                        selectedSkin
+                    );
+
+
+                    // Remove selected from every card
+
+                    skinCards.forEach(
+                        function(otherCard) {
+
+                            otherCard.classList.remove(
+                                "selected"
+                            );
+
+                        }
+                    );
+
+
+                    // Select this card
+
+                    card.classList.add(
+                        "selected"
+                    );
+
+
+                    // Change Watson
+
+                    applySkin();
+
+                }
+            );
+
+        }
+    );
+
+
+    console.log(
+        "✅ Skin cards connected:",
+        skinCards.length
+    );
+
+}
+else {
+
+    console.error(
+        "❌ No skin cards found"
+    );
+
+}
+
 
 // ============================================================
 // FIREBASE LEADERBOARD
@@ -2801,6 +3031,7 @@ console.log("================================================");
 
 updateHighScoreDisplays();
 
+applySkin();
 
 console.log(
     "🏆 Local high score:",
