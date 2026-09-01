@@ -63,19 +63,19 @@ console.log("");
 // SETTINGS
 // ============================================================
 
-const GAME_LENGTH = 60;
+const GAME_LENGTH = 45;
 
 const STARTING_WATSON_SIZE = 116;
 const MIN_WATSON_SIZE = 34;
 
 const STARTING_FIND_TIME = 20;
-const MIN_FIND_TIME = 2.5;
+const MIN_FIND_TIME = 2;
 
-const POINTS_PER_FIND = 13;
+const POINTS_PER_FIND = 20;
 
-const WRONG_CLICK_PENALTY = 13;
+const WRONG_CLICK_PENALTY = 15;
 
-const WATSONS_PER_LEVEL = 4;
+const WATSONS_PER_LEVEL = 3;
 
 
 // ============================================================
@@ -806,6 +806,8 @@ gameArea.addEventListener(
 
         wrongClicks++;
 
+        streak = 0;
+
         score -=
             WRONG_CLICK_PENALTY;
 
@@ -847,8 +849,8 @@ function getMultiplier() {
 
     return Math.min(
         1 +
-        streak * 0.3,
-        5
+        streak * 0.75,
+        15
     );
 
 }
