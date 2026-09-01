@@ -93,7 +93,7 @@ button {
             rgba(0,0,0,0.8)
         ),
 
-        url("background1.jpg");
+        url("assets/background1.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1047,7 +1047,7 @@ button {
             rgba(0,0,0,0.9)
         ),
 
-        url("background7.jpg");
+        url("assets/background7.jpg");
 
     background-size: cover;
     background-position: center;
