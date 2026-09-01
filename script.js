@@ -1,16 +1,56 @@
 // ============================================================
+// FIREBASE
+// ============================================================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+
+console.log("🔥 Firebase loading...");
+
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyAvs8RGpxommOqs_5Xe5JgKZp5xcSsFlQw",
+
+    authDomain: "find-the-watson-game.firebaseapp.com",
+
+    projectId: "find-the-watson-game",
+
+    storageBucket: "find-the-watson-game.firebasestorage.app",
+
+    messagingSenderId: "642451332683",
+
+    appId: "1:642451332683:web:125d0f0b1b7c825d5b37ce",
+
+    measurementId: "G-L8CLXMKT2R"
+
+};
+
+
+const firebaseApp =
+    initializeApp(firebaseConfig);
+
+
+const database =
+    getDatabase(firebaseApp);
+
+
+console.log("✅ Firebase connected!");
+
+
+// ============================================================
 // FIND WATSON
-// VERSION 2 - LOCAL DEVELOPMENT VERSION
+// VERSION 2
+// FIREBASE LEADERBOARD VERSION
 // ============================================================
-//
-// NO FIREBASE
-// NO DATABASE
-// NO IMPORTS
-//
-// Leaderboard uses localStorage so this can be tested directly
-// in VS Code / Live Server.
-//
-// ============================================================
+
 
 console.log("");
 console.log("================================================");
@@ -18,23 +58,32 @@ console.log("🎯 FIND WATSON STARTING");
 console.log("================================================");
 console.log("");
 
+
 // ============================================================
 // SETTINGS
 // ============================================================
 
-const GAME_LENGTH = 5;
+const GAME_LENGTH = 60;
 
-const STARTING_WATSON_SIZE = 115;
-const MIN_WATSON_SIZE = 37;
+const STARTING_WATSON_SIZE = 116;
+const MIN_WATSON_SIZE = 34;
 
 const STARTING_FIND_TIME = 20;
 const MIN_FIND_TIME = 2.5;
 
-const POINTS_PER_FIND = 12;
+const POINTS_PER_FIND = 13;
 
-const WRONG_CLICK_PENALTY = 10;
+const WRONG_CLICK_PENALTY = 13;
 
 const WATSONS_PER_LEVEL = 4;
+
+
+// ============================================================
+// FIREBASE LEADERBOARD
+// ============================================================
+
+const LEADERBOARD_PATH =
+    "leaderboard";
 
 
 // ============================================================
@@ -177,6 +226,7 @@ const newHighScore =
 
 console.log("🔎 CHECKING HTML ELEMENTS...");
 
+
 const elementsToCheck = {
 
     gameMusic,
@@ -274,7 +324,7 @@ const backgrounds = [
     "assets/background4.jpg",
     "assets/background5.jpg",
     "assets/background6.jpg",
-    "assets/background7.jpg"
+    "assets/background7.jpeg"
 
 ];
 
@@ -322,6 +372,7 @@ let gameRunning = false;
 
 console.log("");
 console.log("🖼️ TESTING ASSETS...");
+
 
 if (watson) {
 
@@ -439,10 +490,15 @@ function startGame() {
 
 
     score = 0;
+
     streak = 0;
+
     bestStreak = 0;
+
     watsonsFound = 0;
+
     wrongClicks = 0;
+
     level = 1;
 
     gameTime =
@@ -461,10 +517,11 @@ function startGame() {
 
 
     clearInterval(gameTimer);
+
     clearInterval(findTimer);
 
 
-    // Music
+    // MUSIC
 
     if (gameMusic) {
 
@@ -496,7 +553,7 @@ function startGame() {
     }
 
 
-    // Screens
+    // SCREENS
 
     menuScreen.classList.add(
         "hidden"
@@ -510,6 +567,7 @@ function startGame() {
         "hidden"
     );
 
+
     if (leaderboardScreen) {
 
         leaderboardScreen.classList.add(
@@ -517,6 +575,7 @@ function startGame() {
         );
 
     }
+
 
     gameScreen.classList.remove(
         "hidden"
@@ -528,7 +587,7 @@ function startGame() {
     );
 
 
-    // Background
+    // BACKGROUND
 
     changeBackground();
 
@@ -538,19 +597,19 @@ function startGame() {
     updateDisplays();
 
 
-    // Watson
+    // WATSON
 
     spawnWatson();
 
 
-    // Timers
+    // TIMERS
 
     startGameTimer();
 
     startFindTimer();
 
 
-    // Intro
+    // INTRO
 
     showLevelMessage(
         "GET READY",
@@ -1360,20 +1419,24 @@ function endGame() {
     console.log("🏁 GAME OVER");
     console.log("================================================");
 
+
     console.log(
         "Score:",
         score
     );
+
 
     console.log(
         "Watsons:",
         watsonsFound
     );
 
+
     console.log(
         "Best streak:",
         bestStreak
     );
+
 
     console.log(
         "Level:",
@@ -1428,20 +1491,24 @@ function endGame() {
     finalScore.textContent =
         score.toLocaleString();
 
+
     finalWatsons.textContent =
         watsonsFound;
+
 
     finalBestStreak.textContent =
         bestStreak;
 
+
     finalAccuracy.textContent =
         `${accuracy}%`;
+
 
     finalLevel.textContent =
         level;
 
 
-    // High score
+    // HIGH SCORE
 
     const oldHighScore =
         getHighScore();
@@ -1689,6 +1756,7 @@ if (menuButton) {
                 "hidden"
             );
 
+
             gameScreen.classList.add(
                 "hidden"
             );
@@ -1708,57 +1776,35 @@ if (menuButton) {
 
 
 // ============================================================
-// LOCAL LEADERBOARD
+// FIREBASE LEADERBOARD
 // ============================================================
 
-console.log("");
-console.log("================================================");
-console.log("🏆 LOCAL LEADERBOARD SYSTEM");
-console.log("================================================");
-
-
-const LEADERBOARD_STORAGE_KEY =
-    "findWatsonLeaderboard";
-
-
-function getLeaderboard() {
+async function getLeaderboard() {
 
     console.log(
-        "📦 Reading local leaderboard..."
+        "☁️ Reading Firebase leaderboard..."
     );
-
-
-    const saved =
-        localStorage.getItem(
-            LEADERBOARD_STORAGE_KEY
-        );
-
-
-    if (!saved) {
-
-        console.log(
-            "ℹ️ No leaderboard exists yet"
-        );
-
-        return [];
-
-    }
 
 
     try {
 
-        const leaderboard =
-            JSON.parse(saved);
+        const leaderboardRef =
+            ref(
+                database,
+                LEADERBOARD_PATH
+            );
 
 
-        if (
-            !Array.isArray(
-                leaderboard
-            )
-        ) {
+        const snapshot =
+            await get(
+                leaderboardRef
+            );
 
-            console.warn(
-                "⚠️ Leaderboard data wasn't an array"
+
+        if (!snapshot.exists()) {
+
+            console.log(
+                "ℹ️ Firebase leaderboard is empty"
             );
 
             return [];
@@ -1766,8 +1812,16 @@ function getLeaderboard() {
         }
 
 
+        const data =
+            snapshot.val();
+
+
+        const leaderboard =
+            Object.values(data);
+
+
         console.log(
-            "✅ Leaderboard loaded:",
+            "✅ Firebase leaderboard loaded:",
             leaderboard
         );
 
@@ -1779,7 +1833,7 @@ function getLeaderboard() {
     catch (error) {
 
         console.error(
-            "❌ Could not parse leaderboard:",
+            "❌ Firebase leaderboard read failed:",
             error
         );
 
@@ -1792,30 +1846,66 @@ function getLeaderboard() {
 
 
 // ============================================================
-// SAVE LEADERBOARD
+// SAVE FIREBASE LEADERBOARD
 // ============================================================
 
-function saveLeaderboard(
+async function saveLeaderboard(
     leaderboard
 ) {
 
     console.log(
-        "💾 Saving leaderboard:",
-        leaderboard
+        "☁️ Saving leaderboard to Firebase..."
     );
 
 
-    localStorage.setItem(
-        LEADERBOARD_STORAGE_KEY,
-        JSON.stringify(
-            leaderboard
-        )
-    );
+    try {
+
+        const leaderboardRef =
+            ref(
+                database,
+                LEADERBOARD_PATH
+            );
 
 
-    console.log(
-        "✅ Leaderboard saved locally"
-    );
+        const data = {};
+
+
+        leaderboard.forEach(
+            function(player, index) {
+
+                data[index] =
+                    player;
+
+            }
+        );
+
+
+        await set(
+            leaderboardRef,
+            data
+        );
+
+
+        console.log(
+            "✅ Firebase leaderboard saved!"
+        );
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Firebase leaderboard save failed:",
+            error
+        );
+
+
+        return false;
+
+    }
 
 }
 
@@ -1865,7 +1955,7 @@ if (leaderboardButton) {
 
     leaderboardButton.addEventListener(
         "click",
-        function() {
+        async function() {
 
             console.log("");
             console.log(
@@ -1891,7 +1981,7 @@ if (leaderboardButton) {
             );
 
 
-            loadLeaderboard();
+            await loadLeaderboard();
 
         }
     );
@@ -1933,11 +2023,11 @@ if (leaderboardBackButton) {
 // LOAD / DISPLAY LEADERBOARD
 // ============================================================
 
-function loadLeaderboard() {
+async function loadLeaderboard() {
 
     console.log("");
     console.log(
-        "📊 LOADING LOCAL LEADERBOARD"
+        "📊 LOADING FIREBASE LEADERBOARD"
     );
 
 
@@ -1952,8 +2042,19 @@ function loadLeaderboard() {
     }
 
 
+    leaderboardList.innerHTML = `
+
+        <div class="leaderboard-empty">
+
+            ⏳ LOADING LEADERBOARD...
+
+        </div>
+
+    `;
+
+
     const leaderboard =
-        getLeaderboard();
+        await getLeaderboard();
 
 
     // Sort highest score first
@@ -1961,16 +2062,10 @@ function loadLeaderboard() {
     leaderboard.sort(
         function(a, b) {
 
-            return b.score - a.score;
+            return Number(b.score) -
+                   Number(a.score);
 
         }
-    );
-
-
-    // Save sorted version
-
-    saveLeaderboard(
-        leaderboard
     );
 
 
@@ -2073,7 +2168,7 @@ function loadLeaderboard() {
 
 
     console.log(
-        "✅ Leaderboard displayed"
+        "✅ Firebase leaderboard displayed"
     );
 
 }
@@ -2203,7 +2298,7 @@ if (cancelLeaderboardButton) {
 
 
 // ============================================================
-// SUBMIT SCORE
+// SUBMIT SCORE BUTTON
 // ============================================================
 
 if (submitLeaderboardButton) {
@@ -2244,11 +2339,11 @@ if (leaderboardNameInput) {
 // SUBMIT LEADERBOARD SCORE
 // ============================================================
 
-function submitLeaderboardScore() {
+async function submitLeaderboardScore() {
 
     console.log("");
     console.log("================================================");
-    console.log("🏆 SUBMITTING LOCAL LEADERBOARD SCORE");
+    console.log("🏆 SUBMITTING FIREBASE LEADERBOARD SCORE");
     console.log("================================================");
 
 
@@ -2261,6 +2356,7 @@ function submitLeaderboardScore() {
         name
     );
 
+
     console.log(
         "🎯 Score:",
         score
@@ -2271,7 +2367,9 @@ function submitLeaderboardScore() {
         "";
 
 
-    // Name validation
+    // ========================================================
+    // NAME VALIDATION
+    // ========================================================
 
     if (
         name.length < 2
@@ -2309,187 +2407,286 @@ function submitLeaderboardScore() {
     }
 
 
-    // Get existing leaderboard
+    // ========================================================
+    // DISABLE BUTTON WHILE SAVING
+    // ========================================================
 
-    const leaderboard =
-        getLeaderboard();
+    if (submitLeaderboardButton) {
+
+        submitLeaderboardButton.disabled =
+            true;
+
+        submitLeaderboardButton.textContent =
+            "SAVING...";
+
+    }
 
 
-    // Check if same name already exists
+    try {
 
-    const existingIndex =
-        leaderboard.findIndex(
-            function(player) {
+        // ====================================================
+        // GET CURRENT LEADERBOARD
+        // ====================================================
 
-                return player.name.toLowerCase() ===
-                    name.toLowerCase();
+        const leaderboard =
+            await getLeaderboard();
+
+
+        // ====================================================
+        // CHECK EXISTING NAME
+        // ====================================================
+
+        const existingIndex =
+            leaderboard.findIndex(
+                function(player) {
+
+                    return (
+                        player.name.toLowerCase() ===
+                        name.toLowerCase()
+                    );
+
+                }
+            );
+
+
+        console.log(
+            "Existing player index:",
+            existingIndex
+        );
+
+
+        // ====================================================
+        // EXISTING PLAYER
+        // ====================================================
+
+        if (
+            existingIndex !== -1
+        ) {
+
+            const existingScore =
+                Number(
+                    leaderboard[
+                        existingIndex
+                    ].score
+                );
+
+
+            console.log(
+                "Existing score:",
+                existingScore
+            );
+
+
+            if (
+                score <=
+                existingScore
+            ) {
+
+                console.log(
+                    "ℹ️ Existing score is higher/equal"
+                );
+
+
+                leaderboardNameError.textContent =
+                    `You already have a higher score: ${existingScore.toLocaleString()}`;
+
+
+                return;
+
+            }
+
+
+            console.log(
+                "🔥 New personal best!"
+            );
+
+
+            leaderboard[
+                existingIndex
+            ] = {
+
+                name:
+                    name,
+
+                date:
+                    getCurrentDate(),
+
+                score:
+                    Number(score)
+
+            };
+
+        }
+
+
+        // ====================================================
+        // NEW PLAYER
+        // ====================================================
+
+        else {
+
+            console.log(
+                "🆕 New leaderboard player"
+            );
+
+
+            leaderboard.push({
+
+                name:
+                    name,
+
+                date:
+                    getCurrentDate(),
+
+                score:
+                    Number(score)
+
+            });
+
+        }
+
+
+        // ====================================================
+        // SORT
+        // ====================================================
+
+        leaderboard.sort(
+            function(a, b) {
+
+                return Number(b.score) -
+                       Number(a.score);
 
             }
         );
 
 
-    console.log(
-        "Existing player index:",
-        existingIndex
-    );
+        // ====================================================
+        // SAVE TO FIREBASE
+        // ====================================================
 
-
-    // Existing player
-
-    if (
-        existingIndex !== -1
-    ) {
-
-        const existingScore =
-            Number(
-                leaderboard[
-                    existingIndex
-                ].score
+        const saved =
+            await saveLeaderboard(
+                leaderboard
             );
 
 
-        console.log(
-            "Existing score:",
-            existingScore
-        );
-
-
-        if (
-            score <=
-            existingScore
-        ) {
-
-            console.log(
-                "ℹ️ Existing score is higher/equal"
-            );
-
+        if (!saved) {
 
             leaderboardNameError.textContent =
-                `You already have a higher score: ${existingScore.toLocaleString()}`;
-
+                "Could not save score. Please try again.";
 
             return;
 
         }
 
 
+        // ====================================================
+        // FIND RANK
+        // ====================================================
+
+        const rank =
+            leaderboard.findIndex(
+                function(player) {
+
+                    return (
+                        player.name.toLowerCase() ===
+                        name.toLowerCase()
+                    );
+
+                }
+            ) + 1;
+
+
         console.log(
-            "🔥 New personal best!"
+            "🏆 Player rank:",
+            rank
         );
 
 
-        leaderboard[
-            existingIndex
-        ] = {
-
-            name:
-                name,
-
-            date:
-                getCurrentDate(),
-
-            score:
-                Number(score)
-
-        };
-
-    }
-
-    else {
-
         console.log(
-            "🆕 New leaderboard player"
+            "📅 Date:",
+            getCurrentDate()
         );
 
 
-        leaderboard.push({
+        // ====================================================
+        // SUCCESS
+        // ====================================================
 
-            name:
-                name,
+        leaderboardNameOverlay.classList.add(
+            "hidden"
+        );
 
-            date:
-                getCurrentDate(),
 
-            score:
-                Number(score)
+        document
+            .querySelectorAll(".screen")
+            .forEach(
+                function(screen) {
 
-        });
+                    screen.classList.add(
+                        "hidden"
+                    );
+
+                }
+            );
+
+
+        leaderboardScreen.classList.remove(
+            "hidden"
+        );
+
+
+        await loadLeaderboard();
+
+
+        console.log(
+            "================================================"
+        );
+
+
+        console.log(
+            "✅ SCORE SAVED TO FIREBASE!"
+        );
+
+
+        console.log(
+            "🏆 Rank:",
+            rank
+        );
+
+
+        console.log(
+            "================================================"
+        );
 
     }
 
+    catch (error) {
 
-    // Sort
+        console.error(
+            "❌ SCORE SUBMISSION FAILED:",
+            error
+        );
 
-    leaderboard.sort(
-        function(a, b) {
 
-            return b.score - a.score;
+        leaderboardNameError.textContent =
+            "Something went wrong. Please try again.";
+
+    }
+
+    finally {
+
+        if (submitLeaderboardButton) {
+
+            submitLeaderboardButton.disabled =
+                false;
+
+            submitLeaderboardButton.textContent =
+                "CONTINUE";
 
         }
-    );
 
-
-    // Save
-
-    saveLeaderboard(
-        leaderboard
-    );
-
-
-    console.log(
-        "✅ SCORE SAVED!"
-    );
-
-
-    // Find rank
-
-    const rank =
-        leaderboard.findIndex(
-            function(player) {
-
-                return (
-                    player.name.toLowerCase() ===
-                    name.toLowerCase()
-                );
-
-            }
-        ) + 1;
-
-
-    console.log(
-        "🏆 Player rank:",
-        rank
-    );
-
-
-    // Close prompt
-
-    leaderboardNameOverlay.classList.add(
-        "hidden"
-    );
-
-
-    // Show leaderboard
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(
-            function(screen) {
-
-                screen.classList.add(
-                    "hidden"
-                );
-
-            }
-        );
-
-
-    leaderboardScreen.classList.remove(
-        "hidden"
-    );
-
-
-    loadLeaderboard();
+    }
 
 }
 
@@ -2502,36 +2699,57 @@ function submitLeaderboardScore() {
 //
 // clearWatsonLeaderboard()
 //
-// to erase the local leaderboard.
+// to erase the ENTIRE Firebase leaderboard.
 //
 // ============================================================
 
 window.clearWatsonLeaderboard =
-    function() {
+    async function() {
 
         console.warn(
-            "🗑️ CLEARING LOCAL LEADERBOARD..."
+            "🗑️ CLEARING FIREBASE LEADERBOARD..."
         );
 
 
-        localStorage.removeItem(
-            LEADERBOARD_STORAGE_KEY
-        );
+        try {
+
+            const leaderboardRef =
+                ref(
+                    database,
+                    LEADERBOARD_PATH
+                );
 
 
-        console.log(
-            "✅ Leaderboard cleared"
-        );
+            await set(
+                leaderboardRef,
+                null
+            );
 
 
-        if (
-            leaderboardScreen &&
-            !leaderboardScreen.classList.contains(
-                "hidden"
-            )
-        ) {
+            console.log(
+                "✅ Firebase leaderboard cleared"
+            );
 
-            loadLeaderboard();
+
+            if (
+                leaderboardScreen &&
+                !leaderboardScreen.classList.contains(
+                    "hidden"
+                )
+            ) {
+
+                await loadLeaderboard();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Could not clear leaderboard:",
+                error
+            );
 
         }
 
@@ -2543,15 +2761,23 @@ window.clearWatsonLeaderboard =
 // ============================================================
 
 window.showWatsonLeaderboard =
-    function() {
+    async function() {
 
         console.log(
-            "📊 CURRENT LEADERBOARD:"
+            "📊 FIREBASE LEADERBOARD:"
         );
 
+
+        const leaderboard =
+            await getLeaderboard();
+
+
         console.table(
-            getLeaderboard()
+            leaderboard
         );
+
+
+        return leaderboard;
 
     };
 
@@ -2576,8 +2802,7 @@ console.log(
 
 
 console.log(
-    "🏆 Local leaderboard:",
-    getLeaderboard()
+    "☁️ Firebase leaderboard ready"
 );
 
 
