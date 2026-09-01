@@ -432,6 +432,17 @@ let findTimer = null;
 
 let gameRunning = false;
 
+// ============================================================
+// ANTI-CHEAT
+// ============================================================
+
+const MIN_WATSON_CLICK_TIME = 400;
+
+let lastWatsonClickTime = 0;
+
+let playerBanned =
+    localStorage.getItem("findWatsonBanned") === "true";
+
 
 // ============================================================
 // IMAGE TEST
@@ -539,6 +550,90 @@ if (gameMusic) {
             );
 
         }
+    );
+
+}
+
+// ============================================================
+// BAN PLAYER
+// ============================================================
+
+function banPlayer() {
+
+    console.error(
+        "🚫 ANTI-CHEAT DETECTED!"
+    );
+
+
+    playerBanned =
+        true;
+
+
+    localStorage.setItem(
+        "findWatsonBanned",
+        "true"
+    );
+
+
+    gameRunning =
+        false;
+
+
+    clearInterval(
+        gameTimer
+    );
+
+
+    clearInterval(
+        findTimer
+    );
+
+
+    if (gameMusic) {
+
+        gameMusic.pause();
+
+    }
+
+
+    // Create ban screen
+
+    const banScreen =
+        document.createElement("div");
+
+
+    banScreen.id =
+        "antiCheatBanScreen";
+
+
+    banScreen.innerHTML = `
+
+        <div class="anti-cheat-box">
+
+            <div class="anti-cheat-title">
+                🚫 NICE TRY
+            </div>
+
+            <div class="anti-cheat-text">
+                Suspicious activity was detected.
+            </div>
+
+            <div class="anti-cheat-small">
+                You are banned from submitting scores.
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        banScreen
+    );
+
+
+    console.log(
+        "🚫 PLAYER BANNED"
     );
 
 }
@@ -702,6 +797,45 @@ function spawnWatson() {
         return;
 
     }
+
+    // ============================================================
+// ANTI-CHEAT CLICK SPEED CHECK
+// ============================================================
+
+const currentTime =
+    Date.now();
+
+
+if (lastWatsonClickTime > 0) {
+
+    const timeSinceLastClick =
+        currentTime -
+        lastWatsonClickTime;
+
+
+    console.log(
+        "⏱️ Time since last Watson:",
+        timeSinceLastClick,
+        "ms"
+    );
+
+
+    if (
+        timeSinceLastClick <
+        MIN_WATSON_CLICK_TIME
+    ) {
+
+        banPlayer();
+
+        return;
+
+    }
+
+}
+
+
+lastWatsonClickTime =
+    currentTime;
 
 
     const areaWidth =
