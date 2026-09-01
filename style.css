@@ -93,7 +93,7 @@ button {
             rgba(0,0,0,0.8)
         ),
 
-        url("background1.jpg");
+        url("assets/background1.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1047,7 +1047,7 @@ button {
             rgba(0,0,0,0.9)
         ),
 
-        url("background7.jpg");
+        url("assets/background7.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1562,6 +1562,182 @@ button {
     .leaderboard-date {
 
         display: none;
+
+    }
+
+}
+
+/* =========================================
+   SKINS
+========================================= */
+
+#skinsScreen {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow-y: auto;
+}
+
+
+#skinsScreen .menu-container {
+    width: min(1100px, 92vw);
+    max-height: 90vh;
+
+    padding: 35px;
+
+    overflow-y: auto;
+}
+
+
+/* Subtitle */
+
+.skins-subtitle {
+    text-align: center;
+
+    font-size: clamp(13px, 2vw, 18px);
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 25px;
+
+    opacity: 0.7;
+}
+
+
+/* Grid */
+
+.skins-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(150px, 1fr)
+        );
+
+    gap: 20px;
+
+    width: 100%;
+
+    margin-bottom: 30px;
+
+}
+
+
+/* Skin card */
+
+.skin-card {
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    border:
+        3px solid
+        rgba(255, 255, 255, 0.12);
+
+    border-radius: 18px;
+
+    padding: 15px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-family: inherit;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+
+}
+
+
+.skin-card:hover {
+
+    transform:
+        translateY(-5px)
+        scale(1.03);
+
+}
+
+
+/* Selected skin */
+
+.skin-card.selected {
+
+    border-color:
+        #ffd700;
+
+    background:
+        rgba(255, 215, 0, 0.12);
+
+}
+
+
+/* Skin image */
+
+.skin-card img {
+
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    display: block;
+
+}
+
+
+/* Skin name */
+
+.skin-name {
+
+    margin-top: 12px;
+
+    font-size: 16px;
+
+    font-weight: 1000;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* Mobile */
+
+@media (
+    max-width: 600px
+) {
+
+    .skins-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 12px;
+
+    }
+
+
+    .skin-card {
+
+        padding: 10px;
+
+    }
+
+
+    .skin-name {
+
+        font-size: 13px;
 
     }
 
